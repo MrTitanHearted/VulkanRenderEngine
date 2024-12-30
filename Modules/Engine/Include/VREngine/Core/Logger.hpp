@@ -125,7 +125,7 @@
 #ifndef VRE_VK_CHECK
 #define VRE_VK_CHECK(result)                                               \
     do {                                                                   \
-        vk::Result _VRE_VK_RESULT_ = result;                               \
+        vk::Result _VRE_VK_RESULT_ = static_cast<vk::Result>(result);      \
         if (_VRE_VK_RESULT_ != vk::Result::eSuccess) {                     \
             LOG_ERROR("Vulkan Error: {}", vk::to_string(_VRE_VK_RESULT_)); \
             std::abort();                                                  \
@@ -140,7 +140,7 @@
 #ifndef DVRE_VK_CHECK
 #define DVRE_VK_CHECK(result)                                              \
     do {                                                                   \
-        vk::Result _VRE_VK_RESULT_ = result;                               \
+        vk::Result _VRE_VK_RESULT_ = static_cast<vk::Result>(result);      \
         if (_VRE_VK_RESULT_ != vk::Result::eSuccess) {                     \
             LOG_ERROR("Vulkan Error: {}", vk::to_string(_VRE_VK_RESULT_)); \
             std::abort();                                                  \
@@ -155,9 +155,9 @@
     } while (false)
 #endif
 #ifndef DVRE_VK_CHECK
-#define DVRE_VK_CHECK(result)  \
-    do {                       \
-        vk::Result _ = result; \
+#define DVRE_VK_CHECK(result)                           \
+    do {                                                \
+        vk::Result _ = static_cast<vk::Result>(result); \
     } while (false)
 #endif
 #endif

@@ -7,6 +7,7 @@ int main(int argc, char **argv) {
     vre::Window::Initialize({
         .Title = "Vulkan Render Engine Editor",
     });
+    vre::Vulkan::Context::Initialize({});
 
     vre::Editor editor{};
 
@@ -20,6 +21,7 @@ int main(int argc, char **argv) {
         LOG_FATAL("Unkown Exception");
     }
 
+    vre::Vulkan::Context::Shutdown();
     vre::Window::Shutdown();
     vre::EventObserver::Shutdown();
     vre::AssetServer::Shutdown();

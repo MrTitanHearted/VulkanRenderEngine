@@ -1,0 +1,9 @@
+[submodule "Modules/ThirdParty/imgui"]
+	path = Modules/ThirdParty/imgui
+	url = git@github.com:ocornut/imgui.git
+	branch = docking
+	shallow = true
+[submodule "Modules/ThirdParty/VulkanMemoryAllocator"]
+	path = Modules/ThirdParty/VulkanMemoryAllocator
+	url = git@github.com:GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+	shallow = true

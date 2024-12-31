@@ -50,7 +50,7 @@ namespace vre {
         DVRE_ASSERT(m_IsInitialized, "vre::Editor must be initialized before releasing");
         DLOG_INFO("Releasing vre::Editor");
 
-        m_Device.waitIdle();
+        VRE_VK_CHECK(m_Device.waitIdle());
 
         EventObserver::RemoveCallback<WindowCloseEvent>(m_WindowCloseCallbackHandle);
         EventObserver::RemoveCallback<WindowKeyEvent>(m_WindowKeyCallbackHandle);

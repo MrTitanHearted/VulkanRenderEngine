@@ -9,6 +9,7 @@ namespace vre::Vulkan {
             vk::Extent3D  Extent;
             vk::Format    Format;
             VmaAllocation Allocation;
+            VmaAllocator  Allocator;
         };
     }  // namespace Image
 
@@ -18,6 +19,7 @@ namespace vre::Vulkan {
             vk::BufferUsageFlags UsageFlags;
             std::uint32_t        Size;
             VmaAllocation        Allocation;
+            VmaAllocator         Allocator;
         };
     }  // namespace Buffer
 

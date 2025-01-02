@@ -3,6 +3,31 @@
 #include <VREngine/Engine.hpp>
 
 namespace vre {
+    constexpr std::uint32_t FRAME_OVERLAP = 2u;
+
+    class DeletionQueue {
+       public:
+        DeletionQueue()  = default;
+        ~DeletionQueue() = default;
+
+        void add(const std::function<void()> &deletor);
+        void flush();
+
+       private:
+        std::vector<std::function<void()>> m_Deletors;
+    };
+
+    struct FrameData {
+        vk::CommandPool   CommandPool;
+        vk::CommandBuffer MainCommandBuffer;
+
+        vk::Semaphore SwapchainSemaphore;
+        vk::Semaphore RenderSemaphore;
+        vk::Fence     RenderFence;
+
+        DeletionQueue DeletionQueue;
+    };
+
     class Editor {
        public:
         Editor();
@@ -35,8 +60,16 @@ namespace vre {
 
         VmaAllocator m_VmaAllocator;
 
+        std::array<FrameData, FRAME_OVERLAP> m_Frames;
+        std::uint32_t                        m_FrameNumber;
+
+        DeletionQueue m_MainDeletionQueue;
+
        private:
+        void draw();
         void resize();
+
+        FrameData &getCurrentFrame();
 
         void closeCallback(const WindowCloseEvent &event);
         void keyCallback(const WindowKeyEvent &event);

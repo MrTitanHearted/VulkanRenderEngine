@@ -82,4 +82,38 @@ namespace vre::Vulkan::Image {
         vk::ImageUsageFlags     usageFlags,
         const vk::Extent2D     &extent,
         const VmaAllocator     &allocator);
+
+    vk::ImageView CreateView(
+        const Allocation    &image,
+        vk::ImageAspectFlags aspectFlags,
+        const vk::Device    &device);
+    vk::ImageView CreateColorView(const Allocation &image, const vk::Device &device);
+    vk::ImageView CreateDepthView(const Allocation &image, const vk::Device &device);
+    vk::ImageView CreateView3D(
+        const vk::Image     &image,
+        vk::Format           format,
+        vk::ImageAspectFlags aspectFlags,
+        const vk::Device    &device);
+    vk::ImageView CreateColorView3D(
+        const vk::Image  &image,
+        vk::Format        format,
+        const vk::Device &device);
+    vk::ImageView CreateDepthView3D(
+        const vk::Image  &image,
+        vk::Format        format,
+        const vk::Device &device);
+    vk::ImageView CreateView2D(
+        const vk::Image     &image,
+        vk::Format           format,
+        vk::ImageAspectFlags aspectFlags,
+        const vk::Device    &device);
+    vk::ImageView CreateColorView2D(
+        const vk::Image  &image,
+        vk::Format        format,
+        const vk::Device &device);
+    vk::ImageView CreateDepthView2D(
+        const vk::Image  &image,
+        vk::Format        format,
+        const vk::Device &device);
+
 }  // namespace vre::Vulkan::Image

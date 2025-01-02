@@ -2,9 +2,9 @@
 
 namespace vre::Vulkan::Queue {
     vk::SubmitInfo2 GetSubmitInfo(
-        const std::span<vk::CommandBufferSubmitInfo> &bufferInfos,
-        const std::span<vk::SemaphoreSubmitInfo>     &waitSemaphores,
-        const std::span<vk::SemaphoreSubmitInfo>     &signalSemaphores) {
+        const vk::ArrayProxyNoTemporaries<vk::CommandBufferSubmitInfo> &bufferInfos,
+        const vk::ArrayProxyNoTemporaries<vk::SemaphoreSubmitInfo>     &waitSemaphores,
+        const vk::ArrayProxyNoTemporaries<vk::SemaphoreSubmitInfo>     &signalSemaphores) {
         return vk::SubmitInfo2{
             {},
             waitSemaphores,
@@ -13,13 +13,14 @@ namespace vre::Vulkan::Queue {
         };
     }
 
-    vk::SubmitInfo2 GetSubmitInfo(const std::span<vk::CommandBufferSubmitInfo> &bufferInfos) {
+    vk::SubmitInfo2 GetSubmitInfo(
+        const vk::ArrayProxyNoTemporaries<vk::CommandBufferSubmitInfo> &bufferInfos) {
         return vk::SubmitInfo2{{}, {}, bufferInfos, {}};
     }
 
     vk::SubmitInfo2 GetWaitSubmitInfo(
-        const std::span<vk::CommandBufferSubmitInfo> &bufferInfos,
-        const std::span<vk::SemaphoreSubmitInfo>     &waitSemaphores) {
+        const vk::ArrayProxyNoTemporaries<vk::CommandBufferSubmitInfo> &bufferInfos,
+        const vk::ArrayProxyNoTemporaries<vk::SemaphoreSubmitInfo>     &waitSemaphores) {
         return vk::SubmitInfo2{
             {},
             waitSemaphores,
@@ -29,8 +30,8 @@ namespace vre::Vulkan::Queue {
     }
 
     vk::SubmitInfo2 GetSignalSubmitInfo(
-        const std::span<vk::CommandBufferSubmitInfo> &bufferInfos,
-        const std::span<vk::SemaphoreSubmitInfo>     &signalSemaphores) {
+        const vk::ArrayProxyNoTemporaries<vk::CommandBufferSubmitInfo> &bufferInfos,
+        const vk::ArrayProxyNoTemporaries<vk::SemaphoreSubmitInfo>     &signalSemaphores) {
         return vk::SubmitInfo2{
             {},
             {},
@@ -39,7 +40,11 @@ namespace vre::Vulkan::Queue {
         };
     }
 
-    vk::Result Present(const std::span<vk::Semaphore> &waitSemaphores, const vk::SwapchainKHR &swapchain, std::uint32_t imageIndex, const vk::Queue &queue) {
+    vk::Result Present(
+        const vk::ArrayProxy<vk::Semaphore> &waitSemaphores,
+        const vk::SwapchainKHR              &swapchain,
+        std::uint32_t                        imageIndex,
+        const vk::Queue                     &queue) {
         return queue.presentKHR(vk::PresentInfoKHR{
             waitSemaphores,
             {swapchain},
@@ -47,7 +52,10 @@ namespace vre::Vulkan::Queue {
         });
     }
 
-    vk::Result Present(const vk::SwapchainKHR &swapchain, std::uint32_t imageIndex, const vk::Queue &queue) {
+    vk::Result Present(
+        const vk::SwapchainKHR &swapchain,
+        std::uint32_t           imageIndex,
+        const vk::Queue        &queue) {
         return queue.presentKHR(vk::PresentInfoKHR{
             {},
             {swapchain},
@@ -56,11 +64,11 @@ namespace vre::Vulkan::Queue {
     }
 
     void Submit(
-        const std::vector<vk::CommandBufferSubmitInfo> &bufferInfos,
-        const std::vector<vk::SemaphoreSubmitInfo>     &waitSemaphores,
-        const std::vector<vk::SemaphoreSubmitInfo>     &signalSemaphores,
-        const vk::Fence                                &fence,
-        const vk::Queue                                &queue) {
+        const vk::ArrayProxy<vk::CommandBufferSubmitInfo> &bufferInfos,
+        const vk::ArrayProxy<vk::SemaphoreSubmitInfo>     &waitSemaphores,
+        const vk::ArrayProxy<vk::SemaphoreSubmitInfo>     &signalSemaphores,
+        const vk::Fence                                   &fence,
+        const vk::Queue                                   &queue) {
         VRE_VK_CHECK(queue.submit2(
             vk::SubmitInfo2{
                 {},
@@ -72,19 +80,19 @@ namespace vre::Vulkan::Queue {
     }
 
     void Submit(
-        const std::vector<vk::CommandBufferSubmitInfo> &bufferInfos,
-        const vk::Fence                                &fence,
-        const vk::Queue                                &queue) {
+        const vk::ArrayProxy<vk::CommandBufferSubmitInfo> &bufferInfos,
+        const vk::Fence                                   &fence,
+        const vk::Queue                                   &queue) {
         VRE_VK_CHECK(queue.submit2(
             vk::SubmitInfo2{{}, {}, bufferInfos, {}},
             fence));
     }
 
     void SubmitWait(
-        const std::vector<vk::CommandBufferSubmitInfo> &bufferInfos,
-        const std::vector<vk::SemaphoreSubmitInfo>     &waitSemaphores,
-        const vk::Fence                                &fence,
-        const vk::Queue                                &queue) {
+        const vk::ArrayProxy<vk::CommandBufferSubmitInfo> &bufferInfos,
+        const vk::ArrayProxy<vk::SemaphoreSubmitInfo>     &waitSemaphores,
+        const vk::Fence                                   &fence,
+        const vk::Queue                                   &queue) {
         VRE_VK_CHECK(queue.submit2(
             vk::SubmitInfo2{
                 {},
@@ -96,10 +104,10 @@ namespace vre::Vulkan::Queue {
     }
 
     void SubmitSignal(
-        const std::vector<vk::CommandBufferSubmitInfo> &bufferInfos,
-        const std::vector<vk::SemaphoreSubmitInfo>     &signalSemaphores,
-        const vk::Fence                                &fence,
-        const vk::Queue                                &queue) {
+        const vk::ArrayProxy<vk::CommandBufferSubmitInfo> &bufferInfos,
+        const vk::ArrayProxy<vk::SemaphoreSubmitInfo>     &signalSemaphores,
+        const vk::Fence                                   &fence,
+        const vk::Queue                                   &queue) {
         VRE_VK_CHECK(queue.submit2(
             vk::SubmitInfo2{
                 {},

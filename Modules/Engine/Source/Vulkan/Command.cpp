@@ -73,7 +73,7 @@ namespace vre::Vulkan {
             std::uint32_t          count,
             const vk::CommandPool &pool) {
             return vk::CommandBufferAllocateInfo{
-                {},
+                pool,
                 vk::CommandBufferLevel::ePrimary,
                 count,
             };
@@ -83,7 +83,7 @@ namespace vre::Vulkan {
             std::uint32_t          count,
             const vk::CommandPool &pool) {
             return vk::CommandBufferAllocateInfo{
-                {},
+                pool,
                 vk::CommandBufferLevel::eSecondary,
                 count,
             };
@@ -91,7 +91,7 @@ namespace vre::Vulkan {
 
         vk::CommandBufferAllocateInfo GetPrimaryAllocateInfo(const vk::CommandPool &pool) {
             return vk::CommandBufferAllocateInfo{
-                {},
+                pool,
                 vk::CommandBufferLevel::ePrimary,
                 1,
             };
@@ -99,7 +99,7 @@ namespace vre::Vulkan {
 
         vk::CommandBufferAllocateInfo GetSecondaryAllocateInfo(const vk::CommandPool &pool) {
             return vk::CommandBufferAllocateInfo{
-                {},
+                pool,
                 vk::CommandBufferLevel::eSecondary,
                 1,
             };
@@ -107,7 +107,7 @@ namespace vre::Vulkan {
 
         std::vector<vk::CommandBuffer> AllocatePrimary(std::uint32_t count, const vk::CommandPool &pool, const vk::Device &device) {
             auto [result, buffers] = device.allocateCommandBuffers(vk::CommandBufferAllocateInfo{
-                {},
+                pool,
                 vk::CommandBufferLevel::ePrimary,
                 count,
             });
@@ -118,7 +118,7 @@ namespace vre::Vulkan {
 
         std::vector<vk::CommandBuffer> AllocateSecondary(std::uint32_t count, const vk::CommandPool &pool, const vk::Device &device) {
             auto [result, buffers] = device.allocateCommandBuffers(vk::CommandBufferAllocateInfo{
-                {},
+                pool,
                 vk::CommandBufferLevel::eSecondary,
                 count,
             });
@@ -129,9 +129,9 @@ namespace vre::Vulkan {
 
         vk::CommandBuffer AllocatePrimary(const vk::CommandPool &pool, const vk::Device &device) {
             auto [result, buffers] = device.allocateCommandBuffers(vk::CommandBufferAllocateInfo{
-                {},
+                pool,
                 vk::CommandBufferLevel::ePrimary,
-                1,
+                1u,
             });
             VRE_VK_CHECK(result);
             DVRE_ASSERT(buffers.size() == 1);
@@ -140,7 +140,7 @@ namespace vre::Vulkan {
 
         vk::CommandBuffer AllocateSecondary(const vk::CommandPool &pool, const vk::Device &device) {
             auto [result, buffers] = device.allocateCommandBuffers(vk::CommandBufferAllocateInfo{
-                {},
+                pool,
                 vk::CommandBufferLevel::eSecondary,
                 1,
             });

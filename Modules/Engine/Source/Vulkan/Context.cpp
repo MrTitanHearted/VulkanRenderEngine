@@ -464,7 +464,7 @@ namespace vre::Vulkan {
             VRE_VK_CHECK(result);
             g_SwapchainImageViews.emplace_back(view);
         }
-        if (!oldSwapchain) {
+        if (!!oldSwapchain) {
             g_Device.destroy(oldSwapchain);
         }
     }

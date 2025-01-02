@@ -486,4 +486,208 @@ namespace vre::Vulkan::Image {
         };
     }
 
+    vk::ImageView CreateView(const Allocation &image, vk::ImageAspectFlags aspectFlags, const vk::Device &device) {
+        vk::ImageViewCreateInfo viewInfo{
+            {},
+            image.Image,
+            image.Extent.depth == 1
+                ? vk::ImageViewType::e2D
+                : vk::ImageViewType::e3D,
+            image.Format,
+            vk::ComponentMapping{},
+            vk::ImageSubresourceRange{
+                aspectFlags,
+                0u,
+                vk::RemainingMipLevels,
+                0u,
+                vk::RemainingArrayLayers,
+            },
+        };
+
+        auto [result, view] = device.createImageView(viewInfo);
+        VRE_VK_CHECK(result);
+
+        return view;
+    }
+
+    vk::ImageView CreateColorView(const Allocation &image, const vk::Device &device) {
+        vk::ImageViewCreateInfo viewInfo{
+            {},
+            image.Image,
+            image.Extent.depth == 1
+                ? vk::ImageViewType::e2D
+                : vk::ImageViewType::e3D,
+            image.Format,
+            vk::ComponentMapping{},
+            vk::ImageSubresourceRange{
+                vk::ImageAspectFlagBits::eColor,
+                0u,
+                vk::RemainingMipLevels,
+                0u,
+                vk::RemainingArrayLayers,
+            },
+        };
+
+        auto [result, view] = device.createImageView(viewInfo);
+        VRE_VK_CHECK(result);
+
+        return view;
+    }
+
+    vk::ImageView CreateDepthView(const Allocation &image, const vk::Device &device) {
+        vk::ImageViewCreateInfo viewInfo{
+            {},
+            image.Image,
+            image.Extent.depth == 1
+                ? vk::ImageViewType::e2D
+                : vk::ImageViewType::e3D,
+            image.Format,
+            vk::ComponentMapping{},
+            vk::ImageSubresourceRange{
+                vk::ImageAspectFlagBits::eDepth,
+                0u,
+                vk::RemainingMipLevels,
+                0u,
+                vk::RemainingArrayLayers,
+            },
+        };
+
+        auto [result, view] = device.createImageView(viewInfo);
+        VRE_VK_CHECK(result);
+
+        return view;
+    }
+
+    vk::ImageView CreateView3D(const vk::Image &image, vk::Format format, vk::ImageAspectFlags aspectFlags, const vk::Device &device) {
+        vk::ImageViewCreateInfo viewInfo{
+            {},
+            image,
+            vk::ImageViewType::e3D,
+            format,
+            vk::ComponentMapping{},
+            vk::ImageSubresourceRange{
+                aspectFlags,
+                0u,
+                vk::RemainingMipLevels,
+                0u,
+                vk::RemainingArrayLayers,
+            },
+        };
+
+        auto [result, view] = device.createImageView(viewInfo);
+        VRE_VK_CHECK(result);
+
+        return view;
+    }
+
+    vk::ImageView CreateColorView3D(const vk::Image &image, vk::Format format, const vk::Device &device) {
+        vk::ImageViewCreateInfo viewInfo{
+            {},
+            image,
+            vk::ImageViewType::e3D,
+            format,
+            vk::ComponentMapping{},
+            vk::ImageSubresourceRange{
+                vk::ImageAspectFlagBits::eColor,
+                0u,
+                vk::RemainingMipLevels,
+                0u,
+                vk::RemainingArrayLayers,
+            },
+        };
+
+        auto [result, view] = device.createImageView(viewInfo);
+        VRE_VK_CHECK(result);
+
+        return view;
+    }
+
+    vk::ImageView CreateDepthView3D(const vk::Image &image, vk::Format format, const vk::Device &device) {
+        vk::ImageViewCreateInfo viewInfo{
+            {},
+            image,
+            vk::ImageViewType::e3D,
+            format,
+            vk::ComponentMapping{},
+            vk::ImageSubresourceRange{
+                vk::ImageAspectFlagBits::eDepth,
+                0u,
+                vk::RemainingMipLevels,
+                0u,
+                vk::RemainingArrayLayers,
+            },
+        };
+
+        auto [result, view] = device.createImageView(viewInfo);
+        VRE_VK_CHECK(result);
+
+        return view;
+    }
+
+    vk::ImageView CreateView2D(const vk::Image &image, vk::Format format, vk::ImageAspectFlags aspectFlags, const vk::Device &device) {
+        vk::ImageViewCreateInfo viewInfo{
+            {},
+            image,
+            vk::ImageViewType::e2D,
+            format,
+            vk::ComponentMapping{},
+            vk::ImageSubresourceRange{
+                aspectFlags,
+                0u,
+                vk::RemainingMipLevels,
+                0u,
+                vk::RemainingArrayLayers,
+            },
+        };
+
+        auto [result, view] = device.createImageView(viewInfo);
+        VRE_VK_CHECK(result);
+
+        return view;
+    }
+
+    vk::ImageView CreateColorView2D(const vk::Image &image, vk::Format format, const vk::Device &device) {
+        vk::ImageViewCreateInfo viewInfo{
+            {},
+            image,
+            vk::ImageViewType::e2D,
+            format,
+            vk::ComponentMapping{},
+            vk::ImageSubresourceRange{
+                vk::ImageAspectFlagBits::eColor,
+                0u,
+                vk::RemainingMipLevels,
+                0u,
+                vk::RemainingArrayLayers,
+            },
+        };
+
+        auto [result, view] = device.createImageView(viewInfo);
+        VRE_VK_CHECK(result);
+
+        return view;
+    }
+
+    vk::ImageView CreateDepthView2D(const vk::Image &image, vk::Format format, const vk::Device &device) {
+        vk::ImageViewCreateInfo viewInfo{
+            {},
+            image,
+            vk::ImageViewType::e2D,
+            format,
+            vk::ComponentMapping{},
+            vk::ImageSubresourceRange{
+                vk::ImageAspectFlagBits::eDepth,
+                0u,
+                vk::RemainingMipLevels,
+                0u,
+                vk::RemainingArrayLayers,
+            },
+        };
+
+        auto [result, view] = device.createImageView(viewInfo);
+        VRE_VK_CHECK(result);
+
+        return view;
+    }
+
 }  // namespace vre::Vulkan::Image

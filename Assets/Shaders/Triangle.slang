@@ -17,7 +17,7 @@ struct FragmentInput {
 };
 
 [shader("vertex")]
-VertexOutput main(Vertex v) {
+VertexOutput vsmain(Vertex v) {
     VertexOutput output;
 
     output.Position = float4(v.Position, 1.0f);
@@ -27,7 +27,7 @@ VertexOutput main(Vertex v) {
 }
 
 [shader("fragment")]
-float4 main(FragmentInput input)
+float4 fsmain(FragmentInput input)
     : SV_Target {
     return float4(input.Color, 1.0f);
 }

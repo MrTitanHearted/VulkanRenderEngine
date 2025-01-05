@@ -34,7 +34,7 @@ namespace vre::Vulkan {
                 flags,
                 queueFamilyIndex,
             });
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             return pool;
         }
 
@@ -43,7 +43,7 @@ namespace vre::Vulkan {
                 {},
                 queueFamilyIndex,
             });
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             return pool;
         }
 
@@ -52,7 +52,7 @@ namespace vre::Vulkan {
                 vk::CommandPoolCreateFlagBits::eTransient,
                 queueFamilyIndex,
             });
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             return pool;
         }
 
@@ -63,7 +63,7 @@ namespace vre::Vulkan {
                 vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
                 queueFamilyIndex,
             });
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             return pool;
         }
     }  // namespace CommandPool
@@ -111,7 +111,7 @@ namespace vre::Vulkan {
                 vk::CommandBufferLevel::ePrimary,
                 count,
             });
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             DVRE_ASSERT(buffers.size() == count);
             return buffers;
         }
@@ -122,7 +122,7 @@ namespace vre::Vulkan {
                 vk::CommandBufferLevel::eSecondary,
                 count,
             });
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             DVRE_ASSERT(buffers.size() == count);
             return buffers;
         }
@@ -133,7 +133,7 @@ namespace vre::Vulkan {
                 vk::CommandBufferLevel::ePrimary,
                 1u,
             });
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             DVRE_ASSERT(buffers.size() == 1);
             return buffers.front();
         }
@@ -144,7 +144,7 @@ namespace vre::Vulkan {
                 vk::CommandBufferLevel::eSecondary,
                 1,
             });
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             DVRE_ASSERT(buffers.size() == 1);
             return buffers.front();
         }
@@ -166,19 +166,309 @@ namespace vre::Vulkan {
         }
 
         void Begin(vk::CommandBufferUsageFlags flags, const vk::CommandBuffer &buffer) {
-            VRE_VK_CHECK(buffer.begin(vk::CommandBufferBeginInfo{flags}));
+            DVRE_VK_CHECK(buffer.begin(vk::CommandBufferBeginInfo{flags}));
         }
 
         void Begin(const vk::CommandBuffer &buffer) {
-            VRE_VK_CHECK(buffer.begin(vk::CommandBufferBeginInfo{}));
+            DVRE_VK_CHECK(buffer.begin(vk::CommandBufferBeginInfo{}));
         }
 
         void BeginOneTimeSubmit(const vk::CommandBuffer &buffer) {
-            VRE_VK_CHECK(buffer.begin(vk::CommandBufferBeginInfo{vk::CommandBufferUsageFlagBits::eOneTimeSubmit}));
+            DVRE_VK_CHECK(buffer.begin(vk::CommandBufferBeginInfo{vk::CommandBufferUsageFlagBits::eOneTimeSubmit}));
         }
 
         void End(const vk::CommandBuffer &buffer) {
-            VRE_VK_CHECK(buffer.end());
+            DVRE_VK_CHECK(buffer.end());
+        }
+
+        void CopyImageToImage(
+            const vk::CommandBuffer &buffer,
+            const Image::Allocation &source,
+            const Image::Allocation &destination) {
+            vk::ImageBlit2 imageBlit{
+                vk::ImageSubresourceLayers{
+                    vk::ImageAspectFlagBits::eColor,
+                    0u,
+                    0u,
+                    1u,
+                },
+                {
+                    vk::Offset3D{0, 0, 0},
+                    vk::Offset3D{
+                        std::int32_t(source.Extent.width),
+                        std::int32_t(source.Extent.height),
+                        std::int32_t(source.Extent.depth),
+                    },
+                },
+                vk::ImageSubresourceLayers{
+                    vk::ImageAspectFlagBits::eColor,
+                    0u,
+                    0u,
+                    1u,
+                },
+                {
+                    vk::Offset3D{0, 0, 0},
+                    vk::Offset3D{
+                        std::int32_t(destination.Extent.width),
+                        std::int32_t(destination.Extent.height),
+                        std::int32_t(destination.Extent.depth),
+                    },
+                },
+            };
+            buffer.blitImage2(vk::BlitImageInfo2{
+                source.Image,
+                vk::ImageLayout::eTransferSrcOptimal,
+                destination.Image,
+                vk::ImageLayout::eTransferDstOptimal,
+                {imageBlit},
+                vk::Filter::eLinear,
+            });
+        }
+
+        void CopyImageToImage(
+            const vk::CommandBuffer &buffer,
+            const vk::Image         &source,
+            const vk::Image         &destination,
+            const vk::Extent3D      &size) {
+            vk::ImageBlit2 imageBlit{
+                vk::ImageSubresourceLayers{
+                    vk::ImageAspectFlagBits::eColor,
+                    0u,
+                    0u,
+                    1u,
+                },
+                {
+                    vk::Offset3D{0, 0, 0},
+                    vk::Offset3D{
+                        std::int32_t(size.width),
+                        std::int32_t(size.height),
+                        std::int32_t(size.depth),
+                    },
+                },
+                vk::ImageSubresourceLayers{
+                    vk::ImageAspectFlagBits::eColor,
+                    0u,
+                    0u,
+                    1u,
+                },
+                {
+                    vk::Offset3D{0, 0, 0},
+                    vk::Offset3D{
+                        std::int32_t(size.width),
+                        std::int32_t(size.height),
+                        std::int32_t(size.depth),
+                    },
+                },
+            };
+            buffer.blitImage2(vk::BlitImageInfo2{
+                source,
+                vk::ImageLayout::eTransferSrcOptimal,
+                destination,
+                vk::ImageLayout::eTransferDstOptimal,
+                {imageBlit},
+                vk::Filter::eLinear,
+            });
+        }
+
+        void CopyImageToImage(
+            const vk::CommandBuffer &buffer,
+            const vk::Image         &source,
+            const vk::Image         &destination,
+            const vk::Extent2D      &size) {
+            vk::ImageBlit2 imageBlit{
+                vk::ImageSubresourceLayers{
+                    vk::ImageAspectFlagBits::eColor,
+                    0u,
+                    0u,
+                    1u,
+                },
+                {
+                    vk::Offset3D{0, 0, 0},
+                    vk::Offset3D{
+                        std::int32_t(size.width),
+                        std::int32_t(size.height),
+                        1,
+                    },
+                },
+                vk::ImageSubresourceLayers{
+                    vk::ImageAspectFlagBits::eColor,
+                    0u,
+                    0u,
+                    1u,
+                },
+                {
+                    vk::Offset3D{0, 0, 0},
+                    vk::Offset3D{
+                        std::int32_t(size.width),
+                        std::int32_t(size.height),
+                        1,
+                    },
+                },
+            };
+            buffer.blitImage2(vk::BlitImageInfo2{
+                source,
+                vk::ImageLayout::eTransferSrcOptimal,
+                destination,
+                vk::ImageLayout::eTransferDstOptimal,
+                {imageBlit},
+                vk::Filter::eLinear,
+            });
+        }
+
+        void CopyImageToImage(
+            const vk::CommandBuffer &buffer,
+            const vk::Image         &source,
+            const vk::Image         &destination,
+            const vk::Extent3D      &sourceExtent,
+            const vk::Extent3D      &destinationExtent) {
+            vk::ImageBlit2 imageBlit{
+                vk::ImageSubresourceLayers{
+                    vk::ImageAspectFlagBits::eColor,
+                    0u,
+                    0u,
+                    1u,
+                },
+                {
+                    vk::Offset3D{0, 0, 0},
+                    vk::Offset3D{
+                        std::int32_t(sourceExtent.width),
+                        std::int32_t(sourceExtent.height),
+                        std::int32_t(sourceExtent.depth),
+                    },
+                },
+                vk::ImageSubresourceLayers{
+                    vk::ImageAspectFlagBits::eColor,
+                    0u,
+                    0u,
+                    1u,
+                },
+                {
+                    vk::Offset3D{0, 0, 0},
+                    vk::Offset3D{
+                        std::int32_t(destinationExtent.width),
+                        std::int32_t(destinationExtent.height),
+                        std::int32_t(destinationExtent.depth),
+                    },
+                },
+            };
+            buffer.blitImage2(vk::BlitImageInfo2{
+                source,
+                vk::ImageLayout::eTransferSrcOptimal,
+                destination,
+                vk::ImageLayout::eTransferDstOptimal,
+                {imageBlit},
+                vk::Filter::eLinear,
+            });
+        }
+
+        void CopyImageToImage(
+            const vk::CommandBuffer &buffer,
+            const vk::Image         &source,
+            const vk::Image         &destination,
+            const vk::Extent2D      &sourceExtent,
+            const vk::Extent2D      &destinationExtent) {
+            vk::ImageBlit2 imageBlit{
+                vk::ImageSubresourceLayers{
+                    vk::ImageAspectFlagBits::eColor,
+                    0u,
+                    0u,
+                    1u,
+                },
+                {
+                    vk::Offset3D{0, 0, 0},
+                    vk::Offset3D{
+                        std::int32_t(sourceExtent.width),
+                        std::int32_t(sourceExtent.height),
+                        1,
+                    },
+                },
+                vk::ImageSubresourceLayers{
+                    vk::ImageAspectFlagBits::eColor,
+                    0u,
+                    0u,
+                    1u,
+                },
+                {
+                    vk::Offset3D{0, 0, 0},
+                    vk::Offset3D{
+                        std::int32_t(destinationExtent.width),
+                        std::int32_t(destinationExtent.height),
+                        1,
+                    },
+                },
+            };
+            buffer.blitImage2(vk::BlitImageInfo2{
+                source,
+                vk::ImageLayout::eTransferSrcOptimal,
+                destination,
+                vk::ImageLayout::eTransferDstOptimal,
+                {imageBlit},
+                vk::Filter::eLinear,
+            });
+        }
+
+        void CopyBufferToBuffer(
+            const vk::CommandBuffer  &buffer,
+            const Buffer::Allocation &source,
+            const Buffer::Allocation &destination,
+            std::uint64_t             sourceOffset,
+            std::uint64_t             destinationOffset,
+            std::uint64_t             size) {
+            buffer.copyBuffer(
+                source.Buffer,
+                destination.Buffer,
+                {vk::BufferCopy{
+                    sourceOffset,
+                    destinationOffset,
+                    size,
+                }});
+        }
+
+        void CopyBufferToBuffer(
+            const vk::CommandBuffer  &buffer,
+            const Buffer::Allocation &source,
+            const Buffer::Allocation &destination,
+            std::uint64_t             size) {
+            buffer.copyBuffer(
+                source.Buffer,
+                destination.Buffer,
+                {vk::BufferCopy{
+                    0U,
+                    0U,
+                    size,
+                }});
+        }
+
+        void CopyBufferToBuffer(
+            const vk::CommandBuffer &buffer,
+            const vk::Buffer        &source,
+            const vk::Buffer        &destination,
+            std::uint64_t            sourceOffset,
+            std::uint64_t            destinationOffset,
+            std::uint64_t            size) {
+            buffer.copyBuffer(
+                source,
+                destination,
+                {vk::BufferCopy{
+                    sourceOffset,
+                    destinationOffset,
+                    size,
+                }});
+        }
+
+        void CopyBufferToBuffer(
+            const vk::CommandBuffer &buffer,
+            const vk::Buffer        &source,
+            const vk::Buffer        &destination,
+            std::uint64_t            size) {
+            buffer.copyBuffer(
+                source,
+                destination,
+                {vk::BufferCopy{
+                    0U,
+                    0U,
+                    size,
+                }});
         }
 
     }  // namespace CommandBuffer

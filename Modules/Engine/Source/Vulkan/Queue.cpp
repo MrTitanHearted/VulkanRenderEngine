@@ -69,7 +69,7 @@ namespace vre::Vulkan::Queue {
         const vk::ArrayProxy<vk::SemaphoreSubmitInfo>     &signalSemaphores,
         const vk::Fence                                   &fence,
         const vk::Queue                                   &queue) {
-        VRE_VK_CHECK(queue.submit2(
+        DVRE_VK_CHECK(queue.submit2(
             vk::SubmitInfo2{
                 {},
                 waitSemaphores,
@@ -83,7 +83,7 @@ namespace vre::Vulkan::Queue {
         const vk::ArrayProxy<vk::CommandBufferSubmitInfo> &bufferInfos,
         const vk::Fence                                   &fence,
         const vk::Queue                                   &queue) {
-        VRE_VK_CHECK(queue.submit2(
+        DVRE_VK_CHECK(queue.submit2(
             vk::SubmitInfo2{{}, {}, bufferInfos, {}},
             fence));
     }
@@ -93,7 +93,7 @@ namespace vre::Vulkan::Queue {
         const vk::ArrayProxy<vk::SemaphoreSubmitInfo>     &waitSemaphores,
         const vk::Fence                                   &fence,
         const vk::Queue                                   &queue) {
-        VRE_VK_CHECK(queue.submit2(
+        DVRE_VK_CHECK(queue.submit2(
             vk::SubmitInfo2{
                 {},
                 waitSemaphores,
@@ -108,7 +108,7 @@ namespace vre::Vulkan::Queue {
         const vk::ArrayProxy<vk::SemaphoreSubmitInfo>     &signalSemaphores,
         const vk::Fence                                   &fence,
         const vk::Queue                                   &queue) {
-        VRE_VK_CHECK(queue.submit2(
+        DVRE_VK_CHECK(queue.submit2(
             vk::SubmitInfo2{
                 {},
                 {},

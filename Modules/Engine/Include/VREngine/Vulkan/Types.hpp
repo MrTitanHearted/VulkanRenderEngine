@@ -17,7 +17,7 @@ namespace vre::Vulkan {
         struct Allocation {
             vk::Buffer           Buffer;
             vk::BufferUsageFlags UsageFlags;
-            std::uint32_t        Size;
+            std::uint64_t        Size;
             VmaAllocation        Allocation;
             VmaAllocator         Allocator;
         };
@@ -30,6 +30,21 @@ namespace vre::Vulkan {
             std::string          Entry;
         };
     }  // namespace Shader
+
+    namespace DescriptorLayout {
+        struct Binding {
+            std::uint32_t        Binding;
+            vk::DescriptorType   Type;
+            vk::ShaderStageFlags StageFlags;
+        };
+    }  // namespace DescriptorLayout
+
+    namespace DescriptorPool {
+        struct PoolSizeRatio {
+            vk::DescriptorType Type;
+            float              Ratio;
+        };
+    }  // namespace DescriptorPool
 
     struct VertexLayout {
         vk::VertexInputBindingDescription                Binding;

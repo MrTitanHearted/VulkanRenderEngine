@@ -1,6 +1,7 @@
 #pragma once
 
 #include <VREngine/Core.hpp>
+#include <VREngine/Vulkan/Types.hpp>
 
 namespace vre::Vulkan {
     namespace CommandPool {
@@ -54,5 +55,58 @@ namespace vre::Vulkan {
         void BeginOneTimeSubmit(const vk::CommandBuffer &buffer);
 
         void End(const vk::CommandBuffer &buffer);
+
+        void CopyImageToImage(
+            const vk::CommandBuffer &buffer,
+            const Image::Allocation &source,
+            const Image::Allocation &destination);
+        void CopyImageToImage(
+            const vk::CommandBuffer &buffer,
+            const vk::Image         &source,
+            const vk::Image         &destination,
+            const vk::Extent3D      &size);
+        void CopyImageToImage(
+            const vk::CommandBuffer &buffer,
+            const vk::Image         &source,
+            const vk::Image         &destination,
+            const vk::Extent2D      &size);
+        void CopyImageToImage(
+            const vk::CommandBuffer &buffer,
+            const vk::Image         &source,
+            const vk::Image         &destination,
+            const vk::Extent3D      &sourceExtent,
+            const vk::Extent3D      &destinationExtent);
+        void CopyImageToImage(
+            const vk::CommandBuffer &buffer,
+            const vk::Image         &source,
+            const vk::Image         &destination,
+            const vk::Extent2D      &sourceExtent,
+            const vk::Extent2D      &destinationExtent);
+
+        void CopyBufferToBuffer(
+            const vk::CommandBuffer  &buffer,
+            const Buffer::Allocation &source,
+            const Buffer::Allocation &destination,
+            std::uint64_t             sourceOffset,
+            std::uint64_t             destinationOffset,
+            std::uint64_t             size);
+        void CopyBufferToBuffer(
+            const vk::CommandBuffer  &buffer,
+            const Buffer::Allocation &source,
+            const Buffer::Allocation &destination,
+            std::uint64_t             size);
+        void CopyBufferToBuffer(
+            const vk::CommandBuffer &buffer,
+            const vk::Buffer        &source,
+            const vk::Buffer        &destination,
+            std::uint64_t            sourceOffset,
+            std::uint64_t            destinationOffset,
+            std::uint64_t            size);
+        void CopyBufferToBuffer(
+            const vk::CommandBuffer &buffer,
+            const vk::Buffer        &source,
+            const vk::Buffer        &destination,
+            std::uint64_t            size);
+
     }  // namespace CommandBuffer
 }  // namespace vre::Vulkan

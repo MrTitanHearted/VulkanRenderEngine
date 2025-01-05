@@ -133,7 +133,7 @@
     } while (false)
 #endif
 
-#ifdef VRE_BUILD_TYPE_DEBUG
+#if defined(VRE_BUILD_TYPE_DEBUG)
 #ifndef DVRE_ASSERT
 #define DVRE_ASSERT(condition, ...) vre::assertImpl((condition), #condition, __FUNCTION__, std::source_location::current(), ##__VA_ARGS__)
 #endif

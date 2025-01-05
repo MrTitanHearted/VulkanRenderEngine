@@ -16,19 +16,19 @@ namespace vre::Vulkan {
 
         vk::Fence Create(vk::FenceCreateFlags flags, const vk::Device &device) {
             auto [result, fence] = device.createFence(vk::FenceCreateInfo{flags});
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             return fence;
         }
 
         vk::Fence Create(const vk::Device &device) {
             auto [result, fence] = device.createFence(vk::FenceCreateInfo{});
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             return fence;
         }
 
         vk::Fence CreateSignaled(const vk::Device &device) {
             auto [result, fence] = device.createFence(vk::FenceCreateInfo{vk::FenceCreateFlagBits::eSignaled});
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             return fence;
         }
     }  // namespace Fence
@@ -44,13 +44,13 @@ namespace vre::Vulkan {
 
         vk::Semaphore Create(vk::SemaphoreCreateFlags flags, const vk::Device &device) {
             auto [result, semaphore] = device.createSemaphore(vk::SemaphoreCreateInfo{flags});
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             return semaphore;
         }
 
         vk::Semaphore Create(const vk::Device &device) {
             auto [result, semaphore] = device.createSemaphore(vk::SemaphoreCreateInfo{});
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             return semaphore;
         }
 

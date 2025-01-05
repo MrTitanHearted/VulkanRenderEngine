@@ -50,7 +50,7 @@ foreach(SHADER_FILE ${VULKAN_RENDER_ENGINE_SHADERS})
 
     add_custom_command(
         OUTPUT ${SPIRV}
-        COMMAND ${SLANGC_EXECUTABLE} -I ${VULKAN_RENDER_ENGINE_ASSETS_SOURCE_DIR}/Shaders ${SHADER_FILE} -target spirv -o ${SPIRV}
+        COMMAND ${SLANGC_EXECUTABLE} -fvk-use-entrypoint-name -I ${VULKAN_RENDER_ENGINE_ASSETS_SOURCE_DIR}/Shaders ${SHADER_FILE} -target spirv -o ${SPIRV}
         DEPENDS ${SHADER_FILE}
     )
     list(APPEND SPIRV_BINARY_FILES ${SPIRV})

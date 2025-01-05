@@ -78,7 +78,7 @@ namespace vre::Vulkan {
 
         {
             auto [result, instance] = vk::createInstance(instanceInfo);
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             g_Instance = instance;
         }
 
@@ -89,12 +89,12 @@ namespace vre::Vulkan {
 
 #if defined(VRE_BUILD_TYPE_DEBUG)
         VkDebugUtilsMessengerEXT cDebugMessenger{VK_NULL_HANDLE};
-        VRE_VK_CHECK(CreateDebugUtilsMessengerEXT(g_Instance, &(const VkDebugUtilsMessengerCreateInfoEXT &)debugMessengerInfo, &cDebugMessenger));
+        DVRE_VK_CHECK(CreateDebugUtilsMessengerEXT(g_Instance, &(const VkDebugUtilsMessengerCreateInfoEXT &)debugMessengerInfo, &cDebugMessenger));
         g_DebugMessenger = cDebugMessenger;
 #endif
 
         VkSurfaceKHR cSurface{VK_NULL_HANDLE};
-        VRE_VK_CHECK(glfwCreateWindowSurface(g_Instance, Window::GetGlfwWindow(), nullptr, &cSurface));
+        DVRE_VK_CHECK(glfwCreateWindowSurface(g_Instance, Window::GetGlfwWindow(), nullptr, &cSurface));
         g_Surface = cSurface;
 
         SelectPhysicalDevice(deviceExtensions, settings);
@@ -156,7 +156,7 @@ namespace vre::Vulkan {
 
         {
             auto [result, device] = g_PhysicalDevice.createDevice(deviceInfo);
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             g_Device = device;
         }
 
@@ -177,7 +177,7 @@ namespace vre::Vulkan {
             .instance         = g_Instance,
             .vulkanApiVersion = VK_API_VERSION_1_3,
         };
-        VRE_VK_CHECK(vmaCreateAllocator(&vmaInfo, &g_VmaAllocator));
+        DVRE_VK_CHECK(vmaCreateAllocator(&vmaInfo, &g_VmaAllocator));
 
         g_IsInitialized = true;
     }
@@ -186,13 +186,13 @@ namespace vre::Vulkan {
         DVRE_ASSERT(g_IsInitialized, "vre::Vulkan::Context must be initialized before shutting down");
         DLOG_INFO("Shutting vre::Vulkan::Context down");
 
-        VRE_VK_CHECK(g_Device.waitIdle());
+        DVRE_VK_CHECK(g_Device.waitIdle());
         vmaDestroyAllocator(g_VmaAllocator);
         ReleaseSwapchain();
         g_Device.destroy();
         g_Instance.destroy(g_Surface);
 #if defined(VRE_BUILD_TYPE_DEBUG)
-        VRE_VK_CHECK(DestroyDebugUtilsMessengerEXT(g_Instance, g_DebugMessenger));
+        DVRE_VK_CHECK(DestroyDebugUtilsMessengerEXT(g_Instance, g_DebugMessenger));
 #endif
         g_Instance.destroy();
         g_IsInitialized = false;
@@ -207,7 +207,7 @@ namespace vre::Vulkan {
         auto [width, height] = Window::GetSize();
         DVRE_ASSERT(width != 0 && height != 0, "vre::Vulkan::Context cannot resize with width or height or both being 0. You should deal with it when vre::Window resizes to 0");
         if (g_SwapchainExtent.width == width && g_SwapchainExtent.height == height) return;
-        VRE_VK_CHECK(g_Device.waitIdle());
+        DVRE_VK_CHECK(g_Device.waitIdle());
         CreateSwapchain();
     }
 
@@ -298,7 +298,7 @@ namespace vre::Vulkan {
 
     void Context::SelectPhysicalDevice(const std::vector<const char *> &requiredExtensions, const Settings &settings) {
         auto [result, physicalDevices] = g_Instance.enumeratePhysicalDevices();
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
         DVRE_ASSERT(physicalDevices.size() > 0, "You need a GPU that supports Vulkan 1.3");
 
         for (const vk::PhysicalDevice &physicalDevice : physicalDevices) {
@@ -337,7 +337,7 @@ namespace vre::Vulkan {
         std::uint32_t index = 0u;
         for (const vk::QueueFamilyProperties &queueFamily : queueFamilies) {
             auto [result, presentationSupport] = g_PhysicalDevice.getSurfaceSupportKHR(index, g_Surface);
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             if (presentationSupport == vk::True &&
                 queueFamily.queueCount >= 3u &&
                 std::uint32_t(queueFamily.queueFlags &
@@ -356,7 +356,7 @@ namespace vre::Vulkan {
 
     void Context::SelectSwapchainImageCount(const Settings &settings) {
         auto [result, surfaceCapabilities] = g_PhysicalDevice.getSurfaceCapabilitiesKHR(g_Surface);
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         std::uint32_t imageCount = settings.PreferredImageCount;
         if (surfaceCapabilities.minImageCount > 0 && imageCount < surfaceCapabilities.minImageCount + 1) {
@@ -371,7 +371,7 @@ namespace vre::Vulkan {
 
     void Context::SelectSwapchainFormat(const Settings &settings) {
         auto [result, surfaceFormats] = g_PhysicalDevice.getSurfaceFormatsKHR(g_Surface);
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         for (const vk::Format &preferredFormat : settings.PreferredSurfaceFormats)
             for (const vk::SurfaceFormatKHR &format : surfaceFormats)
@@ -386,7 +386,7 @@ namespace vre::Vulkan {
 
     void Context::SelectSwapchainPresentMode(const Settings &settings) {
         auto [result, presentModes] = g_PhysicalDevice.getSurfacePresentModesKHR(g_Surface);
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         for (const vk::PresentModeKHR &preferredMode : settings.PreferredPresentModes)
             for (const vk::PresentModeKHR &mode : presentModes)
@@ -400,7 +400,7 @@ namespace vre::Vulkan {
 
     void Context::CreateSwapchain() {
         auto [result, surfaceCapabilities] = g_PhysicalDevice.getSurfaceCapabilitiesKHR(g_Surface);
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         auto [width, height]     = Window::GetSize();
         g_SwapchainExtent.width  = width;
@@ -434,12 +434,12 @@ namespace vre::Vulkan {
 
         {
             auto [result, swapchain] = g_Device.createSwapchainKHR(swapchainInfo);
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             g_Swapchain = swapchain;
         }
         {
             auto [result, swapchainImages] = g_Device.getSwapchainImagesKHR(g_Swapchain);
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             g_SwapchainImages = swapchainImages;
         }
         g_SwapchainImageViews.reserve(g_SwapchainImages.size());
@@ -461,7 +461,7 @@ namespace vre::Vulkan {
                             .setLevelCount(1)
                             .setBaseArrayLayer(0)
                             .setLayerCount(1)));
-            VRE_VK_CHECK(result);
+            DVRE_VK_CHECK(result);
             g_SwapchainImageViews.emplace_back(view);
         }
         if (!!oldSwapchain) {
@@ -479,7 +479,7 @@ namespace vre::Vulkan {
 
     bool Context::CheckInstanceLayerSupport(const std::vector<const char *> &requiredLayers) {
         auto [result, availableLayers] = vk::enumerateInstanceLayerProperties();
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         for (const char *const &layerName : requiredLayers) {
             bool layerFound = false;
@@ -524,7 +524,7 @@ namespace vre::Vulkan {
 
     bool Context::CheckPhysicalDeviceSwapchainSupport(const vk::PhysicalDevice &physicalDevice, const vk::SurfaceKHR &surface, const Settings &settings) {
         auto [result, surfaceCapabilities] = physicalDevice.getSurfaceCapabilitiesKHR(surface);
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         vk::ImageUsageFlags usages = surfaceCapabilities.supportedUsageFlags;
         vk::ImageUsageFlags requiredUsages =
@@ -539,7 +539,7 @@ namespace vre::Vulkan {
 
     bool Context::CheckPhysicalDeviceExtensionSupport(const vk::PhysicalDevice &physicalDevice, const std::vector<const char *> &requiredExtensions) {
         auto [result, availableExtensions] = physicalDevice.enumerateDeviceExtensionProperties();
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         std::set<std::string> extensions{requiredExtensions.begin(), requiredExtensions.end()};
         for (const vk::ExtensionProperties &extension : availableExtensions) {

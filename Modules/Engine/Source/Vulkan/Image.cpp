@@ -346,7 +346,7 @@ namespace vre::Vulkan::Image {
         VkImage       cImage{VK_NULL_HANDLE};
         VmaAllocation allocation{VK_NULL_HANDLE};
 
-        VRE_VK_CHECK(vmaCreateImage(
+        DVRE_VK_CHECK(vmaCreateImage(
             allocator,
             &(const VkImageCreateInfo &)imageInfo,
             &allocationInfo,
@@ -390,7 +390,7 @@ namespace vre::Vulkan::Image {
         VkImage       cImage{VK_NULL_HANDLE};
         VmaAllocation allocation{VK_NULL_HANDLE};
 
-        VRE_VK_CHECK(vmaCreateImage(
+        DVRE_VK_CHECK(vmaCreateImage(
             allocator,
             &(const VkImageCreateInfo &)imageInfo,
             &allocationInfo,
@@ -432,7 +432,7 @@ namespace vre::Vulkan::Image {
         VkImage       cImage{VK_NULL_HANDLE};
         VmaAllocation allocation{VK_NULL_HANDLE};
 
-        VRE_VK_CHECK(vmaCreateImage(
+        DVRE_VK_CHECK(vmaCreateImage(
             allocator,
             &(const VkImageCreateInfo &)imageInfo,
             &allocationInfo,
@@ -469,7 +469,7 @@ namespace vre::Vulkan::Image {
         VkImage       cImage{VK_NULL_HANDLE};
         VmaAllocation allocation{VK_NULL_HANDLE};
 
-        VRE_VK_CHECK(vmaCreateImage(
+        DVRE_VK_CHECK(vmaCreateImage(
             allocator,
             &(const VkImageCreateInfo &)imageInfo,
             &allocationInfo,
@@ -505,7 +505,7 @@ namespace vre::Vulkan::Image {
         };
 
         auto [result, view] = device.createImageView(viewInfo);
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         return view;
     }
@@ -529,7 +529,7 @@ namespace vre::Vulkan::Image {
         };
 
         auto [result, view] = device.createImageView(viewInfo);
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         return view;
     }
@@ -553,7 +553,7 @@ namespace vre::Vulkan::Image {
         };
 
         auto [result, view] = device.createImageView(viewInfo);
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         return view;
     }
@@ -575,7 +575,7 @@ namespace vre::Vulkan::Image {
         };
 
         auto [result, view] = device.createImageView(viewInfo);
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         return view;
     }
@@ -597,7 +597,7 @@ namespace vre::Vulkan::Image {
         };
 
         auto [result, view] = device.createImageView(viewInfo);
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         return view;
     }
@@ -619,7 +619,7 @@ namespace vre::Vulkan::Image {
         };
 
         auto [result, view] = device.createImageView(viewInfo);
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         return view;
     }
@@ -641,7 +641,7 @@ namespace vre::Vulkan::Image {
         };
 
         auto [result, view] = device.createImageView(viewInfo);
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         return view;
     }
@@ -663,7 +663,7 @@ namespace vre::Vulkan::Image {
         };
 
         auto [result, view] = device.createImageView(viewInfo);
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         return view;
     }
@@ -685,7 +685,7 @@ namespace vre::Vulkan::Image {
         };
 
         auto [result, view] = device.createImageView(viewInfo);
-        VRE_VK_CHECK(result);
+        DVRE_VK_CHECK(result);
 
         return view;
     }

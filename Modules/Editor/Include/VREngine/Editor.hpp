@@ -1,9 +1,17 @@
 #pragma once
 
 #include <VREngine/Engine.hpp>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_vulkan.h>
 
 namespace vre {
-    constexpr std::uint32_t FRAME_OVERLAP = 2u;
+    constexpr std::uint32_t FRAME_OVERLAP = 3u;
+
+    struct Vertex {
+        glm::vec3 Position;
+        glm::vec3 Color;
+    };
 
     class DeletionQueue {
        public:
@@ -63,11 +71,29 @@ namespace vre {
         std::array<FrameData, FRAME_OVERLAP> m_Frames;
         std::uint32_t                        m_FrameNumber;
 
+        vk::CommandPool   m_ImmCommandPool;
+        vk::CommandBuffer m_ImmCommandBuffer;
+        vk::Fence         m_ImmFence;
+
+        vk::PipelineLayout         m_TrianglePipelineLayout;
+        vk::Pipeline               m_TrianglePipeline;
+        Vulkan::Buffer::Allocation m_TriangleIndexBuffer;
+        Vulkan::Buffer::Allocation m_TriangleVertexBuffer;
+
         DeletionQueue m_MainDeletionQueue;
 
        private:
+        void renderImGui();
+
         void draw();
+        void drawGeometry(const vk::CommandBuffer &cmd, const vk::ImageView &target);
+        void drawImGui(const vk::CommandBuffer &cmd, const vk::ImageView &target);
         void resize();
+
+        void initImGui();
+        void initTriangle();
+
+        void submitImmediately(const std::function<void(const vk::CommandBuffer &cmd)> &function);
 
         FrameData &getCurrentFrame();
 

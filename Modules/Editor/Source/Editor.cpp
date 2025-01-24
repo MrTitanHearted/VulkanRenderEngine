@@ -21,10 +21,9 @@ namespace vre {
         m_GraphicsQueue    = Vulkan::Context::GetGraphicsQueue();
         m_ComputeQueue     = Vulkan::Context::GetComputeQueue();
         m_PresentQueue     = Vulkan::Context::GetPresentQueue();
+        m_VmaAllocator     = Vulkan::Context::GetVmaAllocator();
 
         resize();
-
-        m_VmaAllocator = Vulkan::Context::GetVmaAllocator();
 
         for (FrameData &frame : m_Frames) {
             frame.CommandPool = Vulkan::CommandPool::CreateResetCommandBuffer(
@@ -98,6 +97,9 @@ namespace vre {
 
         VRE_VK_CHECK(m_Device.waitIdle());
 
+        m_Device.destroy(m_DrawImageView);
+        Vulkan::Image::Release(m_DrawImage);
+
         m_MainDeletionQueue.flush();
 
         EventObserver::RemoveCallback<WindowCloseEvent>(m_WindowCloseCallbackHandle);
@@ -138,25 +140,32 @@ namespace vre {
         cmd.reset();
         Vulkan::CommandBuffer::BeginOneTimeSubmit(cmd);
 
-        /*Vulkan::Image::TransitionLayout(cmd, swapchainImage, vk::ImageLayout::eGeneral);
-
-        cmd.clearColorImage(
-            swapchainImage,
-            vk::ImageLayout::eGeneral,
-            std::array<float, 4>{0.2f, 0.3f, 0.3f, 1.0f},
-            {Vulkan::Image::GetColorRange()});*/
-
         Vulkan::Image::TransitionLayout(
             cmd,
-            swapchainImage,
-            // vk::ImageLayout::eGeneral,
+            m_DrawImage,
             vk::ImageLayout::eColorAttachmentOptimal);
-        drawGeometry(cmd, swapchainImageView);
-        drawImGui(cmd, swapchainImageView);
+        drawGeometry(cmd, m_DrawImageView);
+        drawImGui(cmd, m_DrawImageView);
+        Vulkan::Image::TransitionLayout(
+            cmd,
+            m_DrawImage,
+            vk::ImageLayout::eColorAttachmentOptimal,
+            vk::ImageLayout::eTransferSrcOptimal);
         Vulkan::Image::TransitionLayout(
             cmd,
             swapchainImage,
-            vk::ImageLayout::eColorAttachmentOptimal,
+            vk::ImageLayout::eTransferDstOptimal);
+
+        Vulkan::CommandBuffer::CopyImageToImage(
+            cmd,
+            m_DrawImage.Image,
+            swapchainImage,
+            m_SwapchainExtent);
+
+        Vulkan::Image::TransitionLayout(
+            cmd,
+            swapchainImage,
+            vk::ImageLayout::eTransferDstOptimal,
             vk::ImageLayout::ePresentSrcKHR);
 
         Vulkan::CommandBuffer::End(cmd);
@@ -242,6 +251,19 @@ namespace vre {
         m_SwapchainExtent     = Vulkan::Context::GetSwapchainExtent();
         m_SwapchainImages     = Vulkan::Context::GetSwapchainImages();
         m_SwapchainImageViews = Vulkan::Context::GetSwapchainImageViews();
+
+        if (m_DrawImage.Image) {
+            m_Device.destroy(m_DrawImageView);
+            Vulkan::Image::Release(m_DrawImage);
+        }
+
+        m_DrawImage = Vulkan::Image::Allocate(
+            vk::MemoryPropertyFlagBits::eDeviceLocal,
+            m_SwapchainFormat,
+            vk::ImageUsageFlagBits::eColorAttachment | vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst,
+            m_SwapchainExtent,
+            m_VmaAllocator);
+        m_DrawImageView = Vulkan::Image::CreateColorView(m_DrawImage, m_Device);
     }
 
     void Editor::initImGui() {

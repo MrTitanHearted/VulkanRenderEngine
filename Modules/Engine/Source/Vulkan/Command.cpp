@@ -471,5 +471,192 @@ namespace vre::Vulkan {
                 }});
         }
 
+        void CopyBufferToImage(
+            const vk::CommandBuffer  &buffer,
+            const Buffer::Allocation &source,
+            const Image::Allocation  &destination) {
+            buffer.copyBufferToImage(
+                source.Buffer,
+                destination.Image,
+                vk::ImageLayout::eTransferDstOptimal,
+                {vk::BufferImageCopy{
+                    0u,
+                    0u,
+                    0u,
+                    vk::ImageSubresourceLayers{
+                        vk::ImageAspectFlagBits::eColor,
+                        0u,
+                        0u,
+                        1u,
+                    },
+                    vk::Offset3D{0, 0, 0},
+                    destination.Extent,
+                }});
+        }
+
+        void CopyBufferToImage(
+            const vk::CommandBuffer  &buffer,
+            const Buffer::Allocation &source,
+            const vk::Image          &destination,
+            const vk::Extent3D       &size) {
+            buffer.copyBufferToImage(
+                source.Buffer,
+                destination,
+                vk::ImageLayout::eTransferDstOptimal,
+                {vk::BufferImageCopy{
+                    0u,
+                    0u,
+                    0u,
+                    vk::ImageSubresourceLayers{
+                        vk::ImageAspectFlagBits::eColor,
+                        0u,
+                        0u,
+                        1u,
+                    },
+                    vk::Offset3D{0, 0, 0},
+                    size,
+                }});
+        }
+
+        void CopyBufferToImage(
+            const vk::CommandBuffer &buffer,
+            const vk::Buffer        &source,
+            const Image::Allocation &destination) {
+            buffer.copyBufferToImage(
+                source,
+                destination.Image,
+                vk::ImageLayout::eTransferDstOptimal,
+                {vk::BufferImageCopy{
+                    0u,
+                    0u,
+                    0u,
+                    vk::ImageSubresourceLayers{
+                        vk::ImageAspectFlagBits::eColor,
+                        0u,
+                        0u,
+                        1u,
+                    },
+                    vk::Offset3D{0, 0, 0},
+                    destination.Extent,
+                }});
+        }
+
+        void CopyBufferToImage(
+            const vk::CommandBuffer &buffer,
+            const vk::Buffer        &source,
+            const vk::Image         &destination,
+            const vk::Extent3D      &size) {
+            buffer.copyBufferToImage(
+                source,
+                destination,
+                vk::ImageLayout::eTransferDstOptimal,
+                {vk::BufferImageCopy{
+                    0u,
+                    0u,
+                    0u,
+                    vk::ImageSubresourceLayers{
+                        vk::ImageAspectFlagBits::eColor,
+                        0u,
+                        0u,
+                        1u,
+                    },
+                    vk::Offset3D{0, 0, 0},
+                    size,
+                }});
+        }
+
+        void CopyImageToBuffer(
+            const vk::CommandBuffer  &buffer,
+            const Image::Allocation  &source,
+            const Buffer::Allocation &destination) {
+            buffer.copyImageToBuffer(
+                source.Image,
+                vk::ImageLayout::eTransferSrcOptimal,
+                destination.Buffer,
+                {vk::BufferImageCopy{
+                    0u,
+                    0u,
+                    0u,
+                    vk::ImageSubresourceLayers{
+                        vk::ImageAspectFlagBits::eColor,
+                        0u,
+                        0u,
+                        1u,
+                    },
+                    vk::Offset3D{0, 0, 0},
+                    source.Extent,
+                }});
+        }
+
+        void CopyImageToBuffer(
+            const vk::CommandBuffer &buffer,
+            const Image::Allocation &source,
+            const vk::Buffer        &destination) {
+            buffer.copyImageToBuffer(
+                source.Image,
+                vk::ImageLayout::eTransferSrcOptimal,
+                destination,
+                {vk::BufferImageCopy{
+                    0u,
+                    0u,
+                    0u,
+                    vk::ImageSubresourceLayers{
+                        vk::ImageAspectFlagBits::eColor,
+                        0u,
+                        0u,
+                        1u,
+                    },
+                    vk::Offset3D{0, 0, 0},
+                    source.Extent,
+                }});
+        }
+
+        void CopyImageToBuffer(
+            const vk::CommandBuffer  &buffer,
+            const vk::Image          &source,
+            const Buffer::Allocation &destination,
+            const vk::Extent3D       &size) {
+            buffer.copyImageToBuffer(
+                source,
+                vk::ImageLayout::eTransferSrcOptimal,
+                destination.Buffer,
+                {vk::BufferImageCopy{
+                    0u,
+                    0u,
+                    0u,
+                    vk::ImageSubresourceLayers{
+                        vk::ImageAspectFlagBits::eColor,
+                        0u,
+                        0u,
+                        1u,
+                    },
+                    vk::Offset3D{0, 0, 0},
+                    size,
+                }});
+        }
+
+        void CopyImageToBuffer(
+            const vk::CommandBuffer &buffer,
+            const vk::Image         &source,
+            const vk::Buffer        &destination,
+            const vk::Extent3D      &size) {
+            buffer.copyImageToBuffer(
+                source,
+                vk::ImageLayout::eTransferSrcOptimal,
+                destination,
+                {vk::BufferImageCopy{
+                    0u,
+                    0u,
+                    0u,
+                    vk::ImageSubresourceLayers{
+                        vk::ImageAspectFlagBits::eColor,
+                        0u,
+                        0u,
+                        1u,
+                    },
+                    vk::Offset3D{0, 0, 0},
+                    size,
+                }});
+        }
     }  // namespace CommandBuffer
 }  // namespace vre::Vulkan

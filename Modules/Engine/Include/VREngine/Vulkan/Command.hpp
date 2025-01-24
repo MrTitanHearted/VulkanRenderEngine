@@ -108,5 +108,43 @@ namespace vre::Vulkan {
             const vk::Buffer        &destination,
             std::uint64_t            size);
 
+        void CopyBufferToImage(
+            const vk::CommandBuffer  &buffer,
+            const Buffer::Allocation &source,
+            const Image::Allocation  &destination);
+        void CopyBufferToImage(
+            const vk::CommandBuffer  &buffer,
+            const Buffer::Allocation &source,
+            const vk::Image          &destination,
+            const vk::Extent3D       &size);
+        void CopyBufferToImage(
+            const vk::CommandBuffer &buffer,
+            const vk::Buffer        &source,
+            const Image::Allocation &destination);
+        void CopyBufferToImage(
+            const vk::CommandBuffer &buffer,
+            const vk::Buffer        &source,
+            const vk::Image         &destination,
+            const vk::Extent3D      &size);
+
+        void CopyImageToBuffer(
+            const vk::CommandBuffer  &buffer,
+            const Image::Allocation  &source,
+            const Buffer::Allocation &destination);
+        void CopyImageToBuffer(
+            const vk::CommandBuffer &buffer,
+            const Image::Allocation &source,
+            const vk::Buffer        &destination);
+        void CopyImageToBuffer(
+            const vk::CommandBuffer  &buffer,
+            const vk::Image          &source,
+            const Buffer::Allocation &destination,
+            const vk::Extent3D       &size);
+        void CopyImageToBuffer(
+            const vk::CommandBuffer &buffer,
+            const vk::Image         &source,
+            const vk::Buffer        &destination,
+            const vk::Extent3D      &size);
+
     }  // namespace CommandBuffer
 }  // namespace vre::Vulkan

@@ -65,6 +65,8 @@ namespace vre {
 
         std::vector<vk::Image>     m_SwapchainImages;
         std::vector<vk::ImageView> m_SwapchainImageViews;
+        Vulkan::Image::Allocation  m_DrawImage;
+        vk::ImageView              m_DrawImageView;
 
         VmaAllocator m_VmaAllocator;
 

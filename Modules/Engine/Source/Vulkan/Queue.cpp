@@ -45,22 +45,26 @@ namespace vre::Vulkan::Queue {
         const vk::SwapchainKHR              &swapchain,
         std::uint32_t                        imageIndex,
         const vk::Queue                     &queue) {
-        return queue.presentKHR(vk::PresentInfoKHR{
-            waitSemaphores,
-            {swapchain},
-            {imageIndex},
-        });
+        return (vk::Result)vkQueuePresentKHR(
+            queue,
+            &(const VkPresentInfoKHR &)vk::PresentInfoKHR{
+                waitSemaphores,
+                {swapchain},
+                {imageIndex},
+            });
     }
 
     vk::Result Present(
         const vk::SwapchainKHR &swapchain,
         std::uint32_t           imageIndex,
         const vk::Queue        &queue) {
-        return queue.presentKHR(vk::PresentInfoKHR{
-            {},
-            {swapchain},
-            {imageIndex},
-        });
+        return (vk::Result)vkQueuePresentKHR(
+            queue,
+            &(const VkPresentInfoKHR &)vk::PresentInfoKHR{
+                {},
+                {swapchain},
+                {imageIndex},
+            });
     }
 
     void Submit(

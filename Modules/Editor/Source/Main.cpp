@@ -7,7 +7,12 @@ int main(int argc, char **argv) {
     vre::Window::Initialize({
         .Title = "Vulkan Render Engine Editor",
     });
-    vre::Vulkan::Context::Initialize({});
+    vre::Vulkan::Context::Initialize({
+        .PreferredPresentModes = {
+            vk::PresentModeKHR::eMailbox,
+            vk::PresentModeKHR::eImmediate,
+        },
+    });
 
     vre::Editor editor{};
 
